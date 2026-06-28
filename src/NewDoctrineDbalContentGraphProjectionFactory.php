@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility;
 
+use Neos\ContentGraph\DoctrineDbalAdapter\DoctrineDbalContentGraphProjection;
 use Neos\ContentGraph\DoctrineDbalAdapter\DoctrineDbalContentGraphProjectionFactory;
 use Neos\ContentRepository\Core\Factory\SubscriberFactoryDependencies;
 use Neos\ContentRepository\Core\Projection\ProjectionFactoryInterface;
-use Neos\ContentRepository\Core\Projection\ProjectionInterface;
 
+/**
+ * @implements ProjectionFactoryInterface<DoctrineDbalContentGraphProjection>
+ */
 class NewDoctrineDbalContentGraphProjectionFactory implements ProjectionFactoryInterface
 {
     public function __construct(
@@ -19,7 +22,7 @@ class NewDoctrineDbalContentGraphProjectionFactory implements ProjectionFactoryI
     public function build(
         SubscriberFactoryDependencies $projectionFactoryDependencies,
         array $options,
-    ): ProjectionInterface {
+    ): DoctrineDbalContentGraphProjection {
         $requiredGraphSubscriptionId = $options['requiredGraphSubscriptionId'] ?? throw new \RuntimeException('"requiredGraphSubscriptionId" to validate is not set', 1782634978);
 
         if ($this->decoratedFactory->getSubscriptionId()->value !== $requiredGraphSubscriptionId) {

@@ -19,7 +19,8 @@ class OldDoctrineDbalContentGraphProjectionFactory implements ContentGraphProjec
 
     public function getSubscriptionId(): SubscriptionId
     {
-        if (method_exists($this->decoratedFactory, 'getSubscriptionId')) {
+        /** @phpstan-ignore-next-line */
+        if (method_exists($this->decoratedFactory, 'getSubscriptionId') && true === true) {
             return $this->decoratedFactory->getSubscriptionId();
         }
         // the 9.0 and 9.1 released version 0 was not versioned
