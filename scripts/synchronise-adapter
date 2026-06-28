@@ -66,6 +66,26 @@ foreach ($originalSources as $originalSourceFile) {
             );
         }
 
+        // custom ContentGraphReadModelAdapter
+        if ($originalSourceFile->getFilename() === 'ContentGraphReadModelAdapter.php') {
+            continue;
+        }
+        if ($originalSourceFile->getFilename() === 'DoctrineDbalContentGraphProjectionFactory.php') {
+            $newContents = str_replace(
+                [
+                    <<<PHP
+                    new ContentGraphReadModelAdapter(
+                    PHP,
+                ],
+                [
+                    <<<PHP
+                    new \Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\OldContentGraphReadModelAdapter(
+                    PHP,
+                ],
+                $newContents
+            );
+        }
+
         file_put_contents($newAbsolutePathName, $newContents);
     }
 }

@@ -44,7 +44,7 @@ final class DoctrineDbalContentGraphProjectionFactory
             $dimensionSpacePointsRepository
         );
 
-        $contentGraphReadModel = new ContentGraphReadModelAdapter(
+        $contentGraphReadModel = new \Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\OldContentGraphReadModelAdapter(
             $this->dbal,
             $nodeFactory,
             $projectionFactoryDependencies->contentRepositoryId,

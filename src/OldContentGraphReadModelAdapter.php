@@ -12,11 +12,12 @@ declare(strict_types=1);
  * source code.
  */
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated;
+namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraphTableNames;
 use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Domain\Repository\ContentGraph;
 use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Domain\Repository\NodeFactory;
 use Neos\ContentRepository\Core\NodeType\NodeTypeManager;
@@ -29,12 +30,13 @@ use Neos\ContentRepository\Core\SharedModel\Workspace\Workspace;
 use Neos\ContentRepository\Core\SharedModel\Workspace\WorkspaceName;
 use Neos\ContentRepository\Core\SharedModel\Workspace\Workspaces;
 use Neos\ContentRepository\Core\SharedModel\Workspace\WorkspaceStatus;
+use Neos\ContentRepositoryRegistry\Factory\EventStore\DoctrineEventStoreFactory;
 use Neos\EventStore\Model\Event\Version;
 
 /**
  * @internal
  */
-final readonly class ContentGraphReadModelAdapter implements ContentGraphReadModelInterface
+final readonly class OldContentGraphReadModelAdapter implements ContentGraphReadModelInterface
 {
     public function __construct(
         private Connection $dbal,
@@ -72,10 +74,19 @@ final readonly class ContentGraphReadModelAdapter implements ContentGraphReadMod
 
     public function findWorkspaceByName(WorkspaceName $workspaceName): ?Workspace
     {
+        // highly illegal hotfix to be able to create Workspace objects with a version: https://github.com/neos/neos-development-collection/pull/5488
+        // this works but obviously does not prevent the race conditions - but at least we have a working graph like in 9.0 / 9.1
+        $eventStoreTable = DoctrineEventStoreFactory::databaseTableName($this->contentRepositoryId);
         $workspaceQuery = $this->getBasicWorkspaceQuery()
             ->where('ws.name = :workspaceName')
+            ->addSelect(<<<SQL
+            (SELECT MAX(version) FROM {$eventStoreTable}
+              WHERE stream = :workspaceStreamName
+            GROUP BY stream) as version
+            SQL)
             ->setMaxResults(1)
-            ->setParameter('workspaceName', $workspaceName->value);
+            ->setParameter('workspaceName', $workspaceName->value)
+            ->setParameter('workspaceStreamName', "Workspace:$workspaceName->value");
         try {
             $row = $workspaceQuery->fetchAssociative();
         } catch (Exception $e) {
@@ -89,7 +100,18 @@ final readonly class ContentGraphReadModelAdapter implements ContentGraphReadMod
 
     public function findWorkspaces(): Workspaces
     {
-        $workspacesQuery = $this->getBasicWorkspaceQuery();
+        // highly illegal hotfix to be able to create Workspace objects with a version: https://github.com/neos/neos-development-collection/pull/5488
+        // this works but obviously does not prevent the race conditions - but at least we have a working graph like in 9.0 / 9.1
+        $eventStoreTable = DoctrineEventStoreFactory::databaseTableName($this->contentRepositoryId);
+        $workspacesQuery = $this->getBasicWorkspaceQuery()
+            ->innerJoin('ws', <<<SQL
+            (
+              SELECT SUBSTR(stream, 11) as name, MAX(version) as version FROM {$eventStoreTable}
+              WHERE stream LIKE 'Workspace:%'
+              GROUP BY stream
+            )
+            SQL, 'e', 'e.name = ws.name')
+            ->addSelect('e.version');
         try {
             $rows = $workspacesQuery->fetchAllAssociative();
         } catch (Exception $e) {
@@ -174,6 +196,7 @@ final readonly class ContentGraphReadModelAdapter implements ContentGraphReadMod
             $baseWorkspaceName === null
                 ? false
                 : (bool)$row['hasChanges'],
+            Version::fromInteger($row['version'])
         );
     }
 
