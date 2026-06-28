@@ -10,7 +10,7 @@
   "license": "GPL-3.0+",
   "scripts": {
     "synchronise-adapter": "@php ./scripts/synchronise-adapter",
-    "lint:phpstan": "../../bin/phpstan analyse src --level 8"
+    "lint:phpstan": "../../../bin/phpstan analyse src --level 8"
   },
   "require": {
     "neos/contentrepository-core": "~9.2",
