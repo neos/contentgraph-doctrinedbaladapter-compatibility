@@ -1,0 +1,22 @@
+{
+  "name": "neos/contentgraph-doctrinedbaladapter-compatibilty",
+  "type": "library",
+  "description": "",
+  "support": {
+    "source": "https://github.com/neos/contentgraph-doctrinedbaladapter-compatibility",
+    "forum": "https://discuss.neos.io/",
+    "docs": "https://docs.neos.io/"
+  },
+  "license": "GPL-3.0+",
+  "require": {
+    "neos/contentrepository-core": "~9.2",
+    "neos/contentrepository-dbal": "~9.2",
+    "doctrine/dbal": "^3.1.4",
+    "doctrine/migrations": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Neos\\ContentGraph\\DoctrineDbalAdapter\\Compatibilty\\": "src"
+    }
+  }
+}
