@@ -1,0 +1,3 @@
+Neos\ContentRepository\Core\Projection\ContentGraph\ProjectionIntegrityViolationDetectionRunnerFactoryInterface:
+  scope: singleton
+  factoryObjectName: 'Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\DoctrineDbalProjectionIntegrityViolationDetectionRunnerFactory'
