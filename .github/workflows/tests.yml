@@ -23,20 +23,25 @@ jobs:
             neos-version: "9.2"
             # comment in this line to use a specific branch of the neos dev collection
             neos-dev-collection-branch: "task/version-content-graph-projection-schemas"
+            db: { engine: mysql, image: 'mysql:8.0', port: 3306, options: '--health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3' }
+
+          - php-version: "8.4"
+            neos-version: "9.2"
+            # comment in this line to use a specific branch of the neos dev collection
+            neos-dev-collection-branch: "task/version-content-graph-projection-schemas"
+            db: { engine: mysql, image: 'mariadb:10.8', port: 3306, options: '--health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3' }
 
     services:
-      mariadb:
-        # see https://mariadb.com/kb/en/mariadb-server-release-dates/
-        # this should be a current release, e.g. the LTS version
-        image: mariadb:10.8
+      database:
+        image: ${{ matrix.db.image }}
         env:
           MYSQL_USER: neos
           MYSQL_PASSWORD: neos
           MYSQL_DATABASE: neos_behaviour_testing
           MYSQL_ROOT_PASSWORD: neos
         ports:
-          - "3306:3306"
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          - "${{ matrix.db.port }}:${{ matrix.db.port }}"
+        options: ${{ matrix.db.options }}
 
     steps:
       - name: Checkout code
@@ -100,14 +105,11 @@ jobs:
               persistence:
                 backendOptions:
                   host: '127.0.0.1'
-                  port: 3306
+                  port: ${{ matrix.db.port }}
                   driver: pdo_mysql
                   user: 'neos'
                   password: 'neos'
                   dbname: 'neos_behaviour_testing'
-                  charset: 'utf8'
-                  defaultTableOptions:
-                    charset: 'utf8'
           EOF
 
       - name: Run doctrine migrate
