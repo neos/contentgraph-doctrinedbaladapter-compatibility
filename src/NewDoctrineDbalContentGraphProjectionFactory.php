@@ -23,12 +23,6 @@ class NewDoctrineDbalContentGraphProjectionFactory implements ProjectionFactoryI
         SubscriberFactoryDependencies $projectionFactoryDependencies,
         array $options,
     ): DoctrineDbalContentGraphProjection {
-        $requiredGraphSubscriptionId = $options['requiredGraphSubscriptionId'] ?? throw new \RuntimeException('"requiredGraphSubscriptionId" to validate is not set', 1782634978);
-
-        if ($this->decoratedFactory->getSubscriptionId()->value !== $requiredGraphSubscriptionId) {
-            throw new \RuntimeException(sprintf('Expected contentGraph subscription id %s but got %s', $this->decoratedFactory->getSubscriptionId()->value, $requiredGraphSubscriptionId), 1782635009);
-        }
-
         return $this->decoratedFactory->build($projectionFactoryDependencies);
     }
 }

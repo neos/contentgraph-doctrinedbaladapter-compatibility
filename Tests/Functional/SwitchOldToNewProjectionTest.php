@@ -133,14 +133,12 @@ final class SwitchOldToNewProjectionTest extends TestCase
               factoryObjectName: Neos\ContentRepositoryRegistry\Factory\SubscriptionStore\SubscriptionStoreFactory
             propertyConverters: {}
             contentGraphProjection:
+              subscription: 'contentGraph'
               factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\OldDoctrineDbalContentGraphProjectionFactory
               catchUpHooks: {}
             projections:
               'contentGraph_v1':
                 factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\NewDoctrineDbalContentGraphProjectionFactory
-                options:
-                  # must align with the version above and with the version of ContentGraphProjectionFactoryInterface::getSubscriptionId()
-                  requiredGraphSubscriptionId: 'contentGraph_v1'
         YAML);
 
         $newContentGraphSubscriptionStatus = $this->subscriptionEngine->subscriptionStatus(SubscriptionEngineCriteria::create(['contentGraph_v1']))->first();
@@ -254,7 +252,8 @@ final class SwitchOldToNewProjectionTest extends TestCase
             subscriptionStore:
               factoryObjectName: Neos\ContentRepositoryRegistry\Factory\SubscriptionStore\SubscriptionStoreFactory
             propertyConverters: {}
-            contentGraphProjection:
+           contentGraphProjection:
+              subscription: 'contentGraph_v1'
               factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\DoctrineDbalContentGraphProjectionFactory
               catchUpHooks: {}
         YAML);
