@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    name: "Tests (PHP ${{ matrix.php }}, ${{ matrix.db.image }})"
     env:
       FLOW_CONTEXT: Testing
       FLOW_PATH_ROOT: ../neos-base-distribution
@@ -22,13 +23,13 @@ jobs:
           - php-version: "8.4"
             neos-version: "9.2"
             # comment in this line to use a specific branch of the neos dev collection
-            neos-dev-collection-branch: "task/version-content-graph-projection-schemas"
+            # neos-dev-collection-branch: "task/..."
             db: { engine: mysql, image: 'mysql:8.0', port: 3306, options: '--health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3' }
 
           - php-version: "8.4"
             neos-version: "9.2"
             # comment in this line to use a specific branch of the neos dev collection
-            neos-dev-collection-branch: "task/version-content-graph-projection-schemas"
+            # neos-dev-collection-branch: "task/..."
             db: { engine: mysql, image: 'mariadb:10.8', port: 3306, options: '--health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3' }
 
     services:
@@ -111,6 +112,11 @@ jobs:
                   password: 'neos'
                   dbname: 'neos_behaviour_testing'
           EOF
+
+      # - name: Run Functional tests
+      #   run: |
+      #     cd ${FLOW_PATH_ROOT}
+      #     bin/phpunit -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml Packages/Application/Neos.ContentGraph.DoctrineDbalAdapter.Compatibility/Tests/Functional
 
       - name: Run doctrine migrate
         # prevent db transaction in connection from being closed by migrating in advance

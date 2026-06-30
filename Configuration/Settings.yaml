@@ -5,10 +5,3 @@ Neos:
       default:
         contentGraphProjection:
           factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\OldDoctrineDbalContentGraphProjectionFactory
-
-        projections:
-          'contentGraph_v1':
-            factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\NewDoctrineDbalContentGraphProjectionFactory
-            options:
-              # must align with the version above and with the version of ContentGraphProjectionFactoryInterface::getSubscriptionId()
-              requiredGraphSubscriptionId: 'contentGraph_v1'
