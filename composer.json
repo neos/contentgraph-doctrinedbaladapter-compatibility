@@ -9,9 +9,9 @@
   },
   "license": "GPL-3.0+",
   "scripts": {
-    "synchronise-adapter": [
+    "build-generated": [
       "rm -rf src/Generated",
-      "@php ./scripts/synchronise-adapter 9.2"
+      "@php ./scripts/build-generated 9.2"
     ],
     "lint:phpstan": "../../../bin/phpstan analyse src --level 8"
   },
