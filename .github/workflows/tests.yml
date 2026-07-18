@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: "Tests (PHP ${{ matrix.php }}, ${{ matrix.db.image }})"
+    name: "Tests Neos ${{ matrix.neos-version }} (PHP ${{ matrix.php-version }}, ${{ matrix.db.image }})"
     env:
       FLOW_CONTEXT: Testing
       FLOW_PATH_ROOT: ../neos-base-distribution
@@ -119,22 +119,11 @@ jobs:
                   dbname: 'neos_behaviour_testing'
           EOF
 
-      # - name: Run Functional tests
-      #   run: |
-      #     cd ${FLOW_PATH_ROOT}
-      #     bin/phpunit -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml Packages/Application/Neos.ContentGraph.DoctrineDbalAdapter.Compatibility/Tests/Functional
+          # Configure new graph projection
 
-      - name: Run doctrine migrate
-        # prevent db transaction in connection from being closed by migrating in advance
-        run: |
-          cd ${FLOW_PATH_ROOT}
-          FLOW_CONTEXT=Testing/Behat ./flow doctrine:migrate --quiet
+          mkdir Configuration/Testing/Behat
 
-      - name: Configure new graph projection
-        run: |
-          cd ${FLOW_PATH_ROOT}
-
-          cat <<EOF >> Configuration/Testing/Settings.ContentRepositoryRegistry.yaml
+          cat <<EOF >> Configuration/Testing/Behat/Settings.ContentRepositoryRegistry.yaml
           Neos:
             ContentRepositoryRegistry:
               presets:
@@ -143,7 +132,7 @@ jobs:
                     factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\DoctrineDbalContentGraphProjectionFactory
           EOF
 
-          cat <<EOF >> Configuration/Testing/Objects.yaml
+          cat <<EOF >> Configuration/Testing/Behat/Objects.yaml
           Neos\ContentRepository\Core\Projection\ContentGraph\ProjectionIntegrityViolationDetectionRunnerFactoryInterface:
             scope: singleton
             factoryObjectName: 'Neos\ContentRepositoryRegistry\Infrastructure\GenericObjectFactory'
@@ -154,6 +143,17 @@ jobs:
                 object: 'Doctrine\DBAL\Connection'
 
           EOF
+
+      # - name: Run Functional tests
+      #   run: |
+      #     cd ${FLOW_PATH_ROOT}
+      #     bin/phpunit -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml Packages/Application/Neos.ContentGraph.DoctrineDbalAdapter.Compatibility/Tests/Functional
+
+      - name: Run doctrine migrate
+        # prevent db transaction in connection from being closed by migrating in advance
+        run: |
+          cd ${FLOW_PATH_ROOT}
+          FLOW_CONTEXT=Testing/Behat ./flow doctrine:migrate --quiet
 
       - name: Run behat Neos.ContentRepository.BehavioralTests tests with new graph projection
         run: |
