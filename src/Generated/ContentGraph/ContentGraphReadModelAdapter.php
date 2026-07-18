@@ -178,7 +178,6 @@ final readonly class ContentGraphReadModelAdapter implements ContentGraphReadMod
             $baseWorkspaceName === null
                 ? false
                 : (bool)$row['hasChanges'],
-            Version::fromInteger((int)$row['version']),
         );
     }
 

@@ -56,6 +56,39 @@ foreach ($originalSources as $originalSourceFile) {
             $newContents
         );
 
+        if ($originalSourceFile->getFilename() === 'ContentGraphReadModelAdapter.php') {
+            $newContents = str_replace(
+                    [
+                        <<<'PHP'
+                                return Workspace::create(
+                                    WorkspaceName::fromString($row['name']),
+                                    $baseWorkspaceName,
+                                    ContentStreamId::fromString($row['currentContentStreamId']),
+                                    $status,
+                                    $baseWorkspaceName === null
+                                        ? false
+                                        : (bool)$row['hasChanges'],
+                                    Version::fromInteger((int)$row['version']),
+                                );
+                        PHP
+                    ],
+                    [
+                            <<<'PHP'
+                                return Workspace::create(
+                                    WorkspaceName::fromString($row['name']),
+                                    $baseWorkspaceName,
+                                    ContentStreamId::fromString($row['currentContentStreamId']),
+                                    $status,
+                                    $baseWorkspaceName === null
+                                        ? false
+                                        : (bool)$row['hasChanges'],
+                                );
+                        PHP
+                    ],
+                    $newContents
+            );
+        }
+
         file_put_contents($newAbsolutePathName, $newContents);
     }
 }
