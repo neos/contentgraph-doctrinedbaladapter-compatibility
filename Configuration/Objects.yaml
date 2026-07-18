@@ -1,9 +1,0 @@
-
-Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\DoctrineDbalContentGraphProjectionFactory:
-  scope: singleton
-  factoryObjectName: 'Neos\ContentRepositoryRegistry\Infrastructure\GenericObjectFactory'
-  arguments:
-    1:
-      value: 'Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\DoctrineDbalContentGraphProjectionFactory'
-    2:
-      object: 'Doctrine\DBAL\Connection'

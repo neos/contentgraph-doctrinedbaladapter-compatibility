@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph;
+namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Testing;
 
 use Doctrine\DBAL\Connection;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\ContentStreamLayerFinder;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\ContentGraphReadModelAdapter;
+use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\ContentGraphTableNames;
+use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\ContentStreamLayerFinder;
 use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\DimensionSpacePointsRepository;
 use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\NodeFactory;
 use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\ProjectionContentGraph;
+use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal\MysqlPlatformContentRepositoryLocker;
 use Neos\ContentRepository\Core\Factory\SubscriberFactoryDependencies;
 use Neos\ContentRepository\Core\Projection\ContentGraph\ContentGraphProjectionFactoryInterface;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal\MysqlPlatformContentRepositoryLocker;
 
 /**
- * Use this class as ProjectionFactory in your configuration to construct a content graph
- *
- * @api
+ * @internal only for testing
  */
-final class DoctrineDbalContentGraphProjectionFactory implements ContentGraphProjectionFactoryInterface
+final class TestingNextDoctrineDbalContentGraphProjectionFactory implements ContentGraphProjectionFactoryInterface
 {
     public function __construct(
         private readonly Connection $dbal,
@@ -28,7 +28,7 @@ final class DoctrineDbalContentGraphProjectionFactory implements ContentGraphPro
 
     public function build(
         SubscriberFactoryDependencies $projectionFactoryDependencies,
-    ): DoctrineDbalContentGraphProjection {
+    ): TestingNextDoctrineDbalContentGraphProjection {
         if (!$this->dbal->getDatabasePlatform() instanceof AbstractMySQLPlatform) {
             throw new \RuntimeException(sprintf('Cannot build content graph for non mariadb/mysql connection %s', $this->dbal->getDatabasePlatform()::class), 1780672272);
         }
@@ -54,7 +54,7 @@ final class DoctrineDbalContentGraphProjectionFactory implements ContentGraphPro
             $tableNames
         );
 
-        return new DoctrineDbalContentGraphProjection(
+        return new TestingNextDoctrineDbalContentGraphProjection(
             $this->dbal,
             MysqlPlatformContentRepositoryLocker::forContentRepositoryAndConnection(
                 $projectionFactoryDependencies->contentRepositoryId,

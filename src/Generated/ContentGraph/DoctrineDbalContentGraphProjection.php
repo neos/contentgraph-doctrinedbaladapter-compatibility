@@ -81,7 +81,7 @@ use Neos\EventStore\Model\EventEnvelope;
 /**
  * @internal but the graph projection is api
  */
-final class DoctrineDbalContentGraphProjection implements ContentGraphProjectionInterface
+abstract class DoctrineDbalContentGraphProjection
 {
     use ContentStream;
     use NodeMove;
@@ -101,7 +101,7 @@ final class DoctrineDbalContentGraphProjection implements ContentGraphProjection
         private readonly ContentGraphTableNames $tableNames,
         private readonly DimensionSpacePointsRepository $dimensionSpacePointsRepository,
         private readonly ContentStreamLayerFinder $contentStreamLayerFinder,
-        private readonly ContentGraphReadModelInterface $contentGraphReadModel
+        protected readonly ContentGraphReadModelInterface $contentGraphReadModel
     ) {
         $this->subqueries = SqlTableSubqueryFactory::for($this->tableNames);
     }

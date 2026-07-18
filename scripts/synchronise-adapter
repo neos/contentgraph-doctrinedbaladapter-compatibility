@@ -56,6 +56,34 @@ foreach ($originalSources as $originalSourceFile) {
             $newContents
         );
 
+        if ($originalSourceFile->getFilename() === 'DoctrineDbalContentGraphProjection.php') {
+            $newContents = str_replace(
+                    [
+                        <<<'PHP'
+                        final class DoctrineDbalContentGraphProjection implements ContentGraphProjectionInterface
+                        {
+                        PHP,
+                        <<<'PHP'
+                        private readonly ContentGraphReadModelInterface $contentGraphReadModel
+                        PHP,
+                    ],
+                    [
+                        <<<'PHP'
+                        abstract class DoctrineDbalContentGraphProjection
+                        {
+                        PHP,
+                        <<<'PHP'
+                        protected readonly ContentGraphReadModelInterface $contentGraphReadModel
+                        PHP,
+                    ],
+                    $newContents
+            );
+        }
+
+        if ($originalSourceFile->getFilename() === 'DoctrineDbalContentGraphProjectionFactory.php') {
+            continue;
+        }
+
         if ($originalSourceFile->getFilename() === 'ContentGraphTableNames.php') {
             $newContents = str_replace(
                     [

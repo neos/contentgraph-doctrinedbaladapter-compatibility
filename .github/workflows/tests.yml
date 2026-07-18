@@ -129,7 +129,7 @@ jobs:
               presets:
                 default:
                   contentGraphProjection:
-                    factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\DoctrineDbalContentGraphProjectionFactory
+                    factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Testing\TestingNextDoctrineDbalContentGraphProjectionFactory
           EOF
 
           cat <<EOF >> Configuration/Testing/Behat/Objects.yaml
