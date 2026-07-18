@@ -85,7 +85,7 @@ class CrPrepatchCommandController extends CommandController
                       cr_{$contentRepository}_p_graph_hierarchyrelation TO cr_{$contentRepository}_p_92_graph_hierarchyrelation,
                       cr_{$contentRepository}_p_graph_node TO cr_{$contentRepository}_p_92_graph_node,
                       cr_{$contentRepository}_p_graph_referencerelation TO cr_{$contentRepository}_p_92_graph_referencerelation,
-                      cr_{$contentRepository}_p_graph_workspace TO cr_{$contentRepository}_p_92_graph_workspace
+                      cr_{$contentRepository}_p_graph_workspace TO cr_{$contentRepository}_p_92_graph_workspace,
                            
                       # rename old tables to current (cr_{$contentRepository}_p_...)
                       cr_{$contentRepository}_p_90_graph_contentstream TO cr_{$contentRepository}_p_graph_contentstream,
@@ -93,7 +93,7 @@ class CrPrepatchCommandController extends CommandController
                       cr_{$contentRepository}_p_90_graph_hierarchyrelation TO cr_{$contentRepository}_p_graph_hierarchyrelation,
                       cr_{$contentRepository}_p_90_graph_node TO cr_{$contentRepository}_p_graph_node,
                       cr_{$contentRepository}_p_90_graph_referencerelation TO cr_{$contentRepository}_p_graph_referencerelation,
-                      cr_{$contentRepository}_p_90_graph_workspace TO cr_{$contentRepository}_p_graph_workspace,
+                      cr_{$contentRepository}_p_90_graph_workspace TO cr_{$contentRepository}_p_graph_workspace
                     SQL);
                 }
             }
