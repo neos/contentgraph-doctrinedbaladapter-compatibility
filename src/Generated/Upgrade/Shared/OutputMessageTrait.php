@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Shared;
+
+/**
+ * @internal CR upgrade internals
+ */
+trait OutputMessageTrait
+{
+    final protected function log(string $message): void
+    {
+        ($this->outputFn)($message);
+    }
+}

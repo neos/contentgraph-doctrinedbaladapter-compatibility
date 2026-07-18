@@ -10,9 +10,7 @@ if (file_exists($packageRoot . '/original')) {
     echo sprintf('Warning not version %s cloning into "original" because clone exist. Remove beforehand.', $version);
     echo PHP_EOL;
 } else {
-    mkdir($packageRoot . '/original');
-    exec(sprintf('git -C %s clone git@github.com:neos/contentgraph-doctrinedbaladapter.git --depth 1 --branch %s contentgraph-doctrinedbaladapter', escapeshellarg($packageRoot . '/original'), escapeshellarg($version)));
-    exec(sprintf('git -C %s clone git@github.com:neos/contentrepository-dbal.git --depth 1 --branch %s contentrepository-dbal', escapeshellarg($packageRoot . '/original'), escapeshellarg($version)));
+    exec(sprintf('git -C %s clone git@github.com:neos/neos-development-collection.git --depth 1 --branch %s original', escapeshellarg($packageRoot), escapeshellarg($version)));
 }
 
 if (file_exists($packageRoot . '/src/Generated')) {
@@ -23,12 +21,12 @@ if (file_exists($packageRoot . '/src/Generated')) {
 mkdir($packageRoot . '/src/Generated', recursive: true);
 
 $originalSources = new \RecursiveIteratorIterator(
-    new \RecursiveDirectoryIterator($packageRoot . '/original/contentgraph-doctrinedbaladapter/src')
+    new \RecursiveDirectoryIterator($packageRoot . '/original/Neos.ContentGraph.DoctrineDbalAdapter/src')
 );
 
 /** @var \SplFileInfo $originalSourceFile */
 foreach ($originalSources as $originalSourceFile) {
-    $relativePathName = str_replace($packageRoot . '/original/contentgraph-doctrinedbaladapter/src/', '', $originalSourceFile->getPathname());
+    $relativePathName = str_replace($packageRoot . '/original/Neos.ContentGraph.DoctrineDbalAdapter/src/', '', $originalSourceFile->getPathname());
     $newAbsolutePathName = $packageRoot . '/src/Generated/ContentGraph/' . $relativePathName;
 
     if ($originalSourceFile->isDir() && !file_exists($newAbsolutePathName)) {
@@ -153,12 +151,12 @@ foreach ($originalSources as $originalSourceFile) {
 }
 
 $originalSources = new \RecursiveIteratorIterator(
-        new \RecursiveDirectoryIterator($packageRoot . '/original/contentrepository-dbal/Classes')
+    new \RecursiveDirectoryIterator($packageRoot . '/original/Neos.ContentRepository.Dbal/Classes')
 );
 
 /** @var \SplFileInfo $originalSourceFile */
 foreach ($originalSources as $originalSourceFile) {
-    $relativePathName = str_replace($packageRoot . '/original/contentrepository-dbal/Classes/', '', $originalSourceFile->getPathname());
+    $relativePathName = str_replace($packageRoot . '/original/Neos.ContentRepository.Dbal/Classes/', '', $originalSourceFile->getPathname());
     $newAbsolutePathName = $packageRoot . '/src/Generated/Dbal/' . $relativePathName;
 
     if ($originalSourceFile->isDir() && !file_exists($newAbsolutePathName)) {
@@ -187,3 +185,45 @@ foreach ($originalSources as $originalSourceFile) {
         file_put_contents($newAbsolutePathName, $newContents);
     }
 }
+
+
+$originalSources = new \RecursiveIteratorIterator(
+    new \RecursiveDirectoryIterator($packageRoot . '/original/Neos.ContentRepositoryRegistry/Classes/Upgrade')
+);
+
+/** @var \SplFileInfo $originalSourceFile */
+foreach ($originalSources as $originalSourceFile) {
+    $relativePathName = str_replace($packageRoot . '/original/Neos.ContentRepositoryRegistry/Classes/Upgrade/', '', $originalSourceFile->getPathname());
+    $newAbsolutePathName = $packageRoot . '/src/Generated/Upgrade/' . $relativePathName;
+
+    if ($originalSourceFile->isDir() && !file_exists($newAbsolutePathName)) {
+        mkdir($newAbsolutePathName, recursive: true);
+    }
+    if ($originalSourceFile->isFile()) {
+        $newContents = file_get_contents($originalSourceFile->getPathname());
+        $newContents = str_replace(
+                [
+                    <<<PHP
+                    Neos\ContentRepositoryRegistry\Upgrade
+                    PHP
+                ],
+                [
+                    <<<PHP
+                    Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade
+                    PHP
+                ],
+                $newContents
+        );
+
+        if ($originalSourceFile->getFilename() === 'ResetupAndReplayContentGraphUpgrade.php') {
+            continue;
+        }
+
+        if ($originalSourceFile->getFilename() === 'CRUpgradeCommandController.php') {
+            continue;
+        }
+
+        file_put_contents($newAbsolutePathName, $newContents);
+    }
+}
+
