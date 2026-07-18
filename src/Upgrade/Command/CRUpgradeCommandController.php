@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Upgrade\Command;
 
+use Doctrine\DBAL\Connection;
+use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Command\CRUpgradeContextFactory;
+use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Shared\CRUpgradeContext;
 use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
 use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Command\CRUpgradeContextFactory;
 use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\EventsDeduplicateBaseWorkspaceChanges\EventsDeduplicateBaseWorkspaceChangesUpgrade;
 use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\EventsRecordedAtToUtc\EventsRecordedAtToUtcUpgrade;
 use Neos\Flow\Annotations as Flow;
@@ -34,7 +36,7 @@ final class CRUpgradeCommandController extends CommandController
     protected ContentRepositoryRegistry $contentRepositoryRegistry;
 
     #[Flow\Inject]
-    protected CRUpgradeContextFactory $upgradeContextFactory;
+    protected Connection $connection;
 
     /**
      * Optional upgrade to adjust event time stamps and node dates to UTC
@@ -57,9 +59,8 @@ final class CRUpgradeCommandController extends CommandController
      */
     public function eventsRecordedAtToUtcCommand(string $contentRepository = 'default', bool $force = false): void
     {
-        $context = $this->contentRepositoryRegistry->buildService(
-            ContentRepositoryId::fromString($contentRepository),
-            $this->upgradeContextFactory
+        $context = $this->buildContext(
+            ContentRepositoryId::fromString($contentRepository)
         );
 
         if (!$force && !$this->output->askConfirmation(sprintf('> This will rewrite events of content repository "%s" to use UTC dates consistently and backup the original events. This will take even on big sites less than 5 minutes. To have the UTC changes applied to the graph a replay needs to be done which will take quite some time. Are you sure to proceed? (y/n) ', $context->contentRepositoryId->value), false)) {
@@ -110,9 +111,8 @@ final class CRUpgradeCommandController extends CommandController
             return;
         }
 
-        $context = $this->contentRepositoryRegistry->buildService(
-            ContentRepositoryId::fromString($contentRepository),
-            $this->upgradeContextFactory
+        $context = $this->buildContext(
+            ContentRepositoryId::fromString($contentRepository)
         );
 
         if ((!$dryRun && !$force) && !$this->output->askConfirmation(sprintf('> This will rewrite events of content repository "%s" to remove duplicated base workspace changes and backup the original events. This will take even on big sites less than 5 minutes. Are you sure to proceed? (y/n) ', $context->contentRepositoryId->value), false)) {
@@ -128,5 +128,16 @@ final class CRUpgradeCommandController extends CommandController
         $upgrade->execute(
             dryRun: $dryRun
         );
+    }
+
+    private function buildContext(ContentRepositoryId $contentRepositoryId): CRUpgradeContext
+    {
+        $context = $this->contentRepositoryRegistry->buildService(
+            $contentRepositoryId,
+            new CRUpgradeContextFactory(
+                $this->connection
+            )
+        );
+        return $context;
     }
 }
