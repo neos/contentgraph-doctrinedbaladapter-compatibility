@@ -24,19 +24,19 @@ jobs:
             neos-version: "9.0"
             # comment in this line to use a specific branch of the neos dev collection
             # neos-dev-collection-branch: "task/..."
-            db: { engine: mysql, image: 'mysql:8.0', port: 3306, options: '--health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3' }
-
-          - php-version: "8.4"
-            neos-version: "9.1"
-            # comment in this line to use a specific branch of the neos dev collection
-            # neos-dev-collection-branch: "task/..."
-            db: { engine: mysql, image: 'mysql:8.0', port: 3306, options: '--health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3' }
+            db: { engine: mysql, image: 'mariadb:10.8', port: 3306, options: '--health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3' }
 
           - php-version: "8.4"
             neos-version: "9.1"
             # comment in this line to use a specific branch of the neos dev collection
             # neos-dev-collection-branch: "task/..."
             db: { engine: mysql, image: 'mariadb:10.8', port: 3306, options: '--health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3' }
+
+          - php-version: "8.4"
+            neos-version: "9.1"
+            # comment in this line to use a specific branch of the neos dev collection
+            # neos-dev-collection-branch: "task/..."
+            db: { engine: mysql, image: 'mysql:8.0', port: 3306, options: '--health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3' }
 
     services:
       database:
