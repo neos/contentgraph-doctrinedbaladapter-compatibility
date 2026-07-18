@@ -142,6 +142,8 @@ jobs:
                 default:
                   contentGraphProjection:
                     factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Testing\TestingNextDoctrineDbalContentGraphProjectionFactory
+                  projections:
+                    contentGraph_92: ~
           EOF
 
           cat <<EOF >> Configuration/Testing/Behat/Objects.yaml
