@@ -56,6 +56,28 @@ foreach ($originalSources as $originalSourceFile) {
             $newContents
         );
 
+        if ($originalSourceFile->getFilename() === 'ContentGraphTableNames.php') {
+            $newContents = str_replace(
+                    [
+                        <<<'PHP'
+                            public static function create(ContentRepositoryId $contentRepositoryId): self
+                            {
+                                return new self(sprintf('cr_%s_p_graph', $contentRepositoryId->value));
+                            }
+                        PHP
+                    ],
+                    [
+                        <<<'PHP'
+                            public static function create(ContentRepositoryId $contentRepositoryId): self
+                            {
+                                return new self(sprintf('cr_%s_p_92_graph', $contentRepositoryId->value));
+                            }
+                        PHP
+                    ],
+                    $newContents
+            );
+        }
+
         if ($originalSourceFile->getFilename() === 'ContentGraphReadModelAdapter.php') {
             $newContents = str_replace(
                     [
