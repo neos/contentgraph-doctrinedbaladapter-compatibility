@@ -158,6 +158,7 @@ jobs:
       - name: Run behat Neos.ContentRepository.BehavioralTests tests with new graph projection
         run: |
           cd ${FLOW_PATH_ROOT}
+          FLOW_CONTEXT=Testing/Behat ./flow testingcontentgraphprojection:validatecontentrepository default
           FLOW_CONTEXT=Testing/Behat bin/behat -f progress --strict --no-interaction -c Packages/Neos/Neos.ContentRepository.BehavioralTests/Tests/Behavior/behat.yml.dist -vvv --stop-on-failure
 
       - name: Show log on failure
