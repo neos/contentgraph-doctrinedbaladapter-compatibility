@@ -143,11 +143,6 @@ abstract class DoctrineDbalContentGraphProjection
         $this->truncateDatabaseTables();
     }
 
-    public function getState(): ContentGraphReadModelInterface
-    {
-        return $this->contentGraphReadModel;
-    }
-
     public function apply(EventInterface $event, EventEnvelope $eventEnvelope): void
     {
         match ($event::class) {

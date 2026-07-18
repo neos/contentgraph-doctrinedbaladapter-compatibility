@@ -66,6 +66,14 @@ foreach ($originalSources as $originalSourceFile) {
                         <<<'PHP'
                         private readonly ContentGraphReadModelInterface $contentGraphReadModel
                         PHP,
+                        <<<'PHP'
+                            public function getState(): ContentGraphReadModelInterface
+                            {
+                                return $this->contentGraphReadModel;
+                            }
+                        
+                        
+                        PHP,
                     ],
                     [
                         <<<'PHP'
@@ -75,6 +83,7 @@ foreach ($originalSources as $originalSourceFile) {
                         <<<'PHP'
                         protected readonly ContentGraphReadModelInterface $contentGraphReadModel
                         PHP,
+                        '',
                     ],
                     $newContents
             );
