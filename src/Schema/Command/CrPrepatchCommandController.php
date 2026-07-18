@@ -107,6 +107,7 @@ class CrPrepatchCommandController extends CommandController
         file_put_contents($filePath, $migrationCode);
 
         $this->outputLine('<success>Generated new migration version %s</success>', [$migrationVersion]);
+        /** @phpstan-ignore-next-line constant.notFound */
         $this->outputLine('Wrote migration to <comment>%s</comment>', [str_replace(FLOW_PATH_ROOT, '', $filePath)]);
     }
 }
