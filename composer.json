@@ -16,7 +16,7 @@
     "lint:phpstan": "../../../bin/phpstan analyse src --level 8"
   },
   "require": {
-    "php": ">= 8.4",
+    "php": ">= 8.2",
     "neos/contentrepository-core": "~9.0 || ~9.1",
     "neos/contentrepositoryregistry": "~9.0 || ~9.1",
     "doctrine/dbal": "^3.1.4",
