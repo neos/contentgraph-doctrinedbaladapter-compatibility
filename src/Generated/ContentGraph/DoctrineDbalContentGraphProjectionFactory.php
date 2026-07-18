@@ -19,7 +19,7 @@ use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal\MysqlPlat
  *
  * @api
  */
-final class DoctrineDbalContentGraphProjectionFactory
+final class DoctrineDbalContentGraphProjectionFactory implements ContentGraphProjectionFactoryInterface
 {
     public function __construct(
         private readonly Connection $dbal,

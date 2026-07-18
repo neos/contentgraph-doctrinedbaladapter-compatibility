@@ -56,24 +56,6 @@ foreach ($originalSources as $originalSourceFile) {
             $newContents
         );
 
-        if ($originalSourceFile->getFilename() === 'DoctrineDbalContentGraphProjectionFactory.php') {
-            $newContents = str_replace(
-                [
-                    <<<PHP
-                    final class DoctrineDbalContentGraphProjectionFactory implements ContentGraphProjectionFactoryInterface
-                    {
-                    PHP
-                ],
-                [
-                    <<<PHP
-                    final class DoctrineDbalContentGraphProjectionFactory
-                    {
-                    PHP
-                ],
-                $newContents
-            );
-        }
-
         file_put_contents($newAbsolutePathName, $newContents);
     }
 }
