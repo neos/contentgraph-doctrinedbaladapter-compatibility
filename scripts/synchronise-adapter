@@ -10,7 +10,9 @@ if (file_exists($packageRoot . '/original')) {
     echo sprintf('Warning not version %s cloning into "original" because clone exist. Remove beforehand.', $version);
     echo PHP_EOL;
 } else {
-    exec(sprintf('git -C %s clone git@github.com:neos/contentgraph-doctrinedbaladapter.git --depth 1 --branch %s original', escapeshellarg($packageRoot), escapeshellarg($version)));
+    mkdir($packageRoot . '/original');
+    exec(sprintf('git -C %s clone git@github.com:neos/contentgraph-doctrinedbaladapter.git --depth 1 --branch %s contentgraph-doctrinedbaladapter', escapeshellarg($packageRoot . '/original'), escapeshellarg($version)));
+    exec(sprintf('git -C %s clone git@github.com:neos/contentrepository-dbal.git --depth 1 --branch %s contentrepository-dbal', escapeshellarg($packageRoot . '/original'), escapeshellarg($version)));
 }
 
 if (file_exists($packageRoot . '/src/Generated')) {
@@ -21,13 +23,13 @@ if (file_exists($packageRoot . '/src/Generated')) {
 mkdir($packageRoot . '/src/Generated', recursive: true);
 
 $originalSources = new \RecursiveIteratorIterator(
-    new \RecursiveDirectoryIterator($packageRoot . '/original/src')
+    new \RecursiveDirectoryIterator($packageRoot . '/original/contentgraph-doctrinedbaladapter/src')
 );
 
 /** @var \SplFileInfo $originalSourceFile */
 foreach ($originalSources as $originalSourceFile) {
-    $relativePathName = str_replace($packageRoot . '/original/src/', '', $originalSourceFile->getPathname());
-    $newAbsolutePathName = $packageRoot . '/src/Generated/' . $relativePathName;
+    $relativePathName = str_replace($packageRoot . '/original/contentgraph-doctrinedbaladapter/src/', '', $originalSourceFile->getPathname());
+    $newAbsolutePathName = $packageRoot . '/src/Generated/ContentGraph/' . $relativePathName;
 
     if ($originalSourceFile->isDir() && !file_exists($newAbsolutePathName)) {
         mkdir($newAbsolutePathName, recursive: true);
@@ -38,11 +40,17 @@ foreach ($originalSources as $originalSourceFile) {
             [
                 <<<PHP
                 Neos\ContentGraph\DoctrineDbalAdapter
+                PHP,
+                <<<PHP
+                Neos\ContentRepository\Dbal
                 PHP
             ],
             [
                 <<<PHP
-                Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated
+                Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph
+                PHP,
+                <<<PHP
+                Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal
                 PHP
             ],
             $newContents
@@ -66,24 +74,40 @@ foreach ($originalSources as $originalSourceFile) {
             );
         }
 
-        // custom ContentGraphReadModelAdapter
-        if ($originalSourceFile->getFilename() === 'ContentGraphReadModelAdapter.php') {
-            continue;
-        }
-        if ($originalSourceFile->getFilename() === 'DoctrineDbalContentGraphProjectionFactory.php') {
-            $newContents = str_replace(
+        file_put_contents($newAbsolutePathName, $newContents);
+    }
+}
+
+$originalSources = new \RecursiveIteratorIterator(
+        new \RecursiveDirectoryIterator($packageRoot . '/original/contentrepository-dbal/Classes')
+);
+
+/** @var \SplFileInfo $originalSourceFile */
+foreach ($originalSources as $originalSourceFile) {
+    $relativePathName = str_replace($packageRoot . '/original/contentrepository-dbal/Classes/', '', $originalSourceFile->getPathname());
+    $newAbsolutePathName = $packageRoot . '/src/Generated/Dbal/' . $relativePathName;
+
+    if ($originalSourceFile->isDir() && !file_exists($newAbsolutePathName)) {
+        mkdir($newAbsolutePathName, recursive: true);
+    }
+    if ($originalSourceFile->isFile()) {
+        $newContents = file_get_contents($originalSourceFile->getPathname());
+        $newContents = str_replace(
                 [
                     <<<PHP
-                    new ContentGraphReadModelAdapter(
-                    PHP,
+                    Neos\ContentRepository\Dbal
+                    PHP
                 ],
                 [
                     <<<PHP
-                    new \Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\OldContentGraphReadModelAdapter(
-                    PHP,
+                    Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal
+                    PHP
                 ],
                 $newContents
-            );
+        );
+
+        if ($originalSourceFile->getFilename() === 'DoctrineSubscriptionStore.php') {
+            continue;
         }
 
         file_put_contents($newAbsolutePathName, $newContents);

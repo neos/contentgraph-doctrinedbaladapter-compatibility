@@ -1,8 +1,0 @@
-Neos\ContentRepository\Core\Projection\ContentGraph\ProjectionIntegrityViolationDetectionRunnerFactoryInterface:
-  scope: singleton
-  factoryObjectName: 'Neos\ContentRepositoryRegistry\Infrastructure\GenericObjectFactory'
-  arguments:
-    1:
-      value: 'Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\DoctrineDbalProjectionIntegrityViolationDetectionRunnerFactory'
-    2:
-      object: 'Doctrine\DBAL\Connection'

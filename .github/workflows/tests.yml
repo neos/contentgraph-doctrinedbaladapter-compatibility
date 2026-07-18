@@ -21,13 +21,19 @@ jobs:
       matrix:
         include:
           - php-version: "8.4"
-            neos-version: "9.2"
+            neos-version: "9.0"
             # comment in this line to use a specific branch of the neos dev collection
             # neos-dev-collection-branch: "task/..."
             db: { engine: mysql, image: 'mysql:8.0', port: 3306, options: '--health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3' }
 
           - php-version: "8.4"
-            neos-version: "9.2"
+            neos-version: "9.1"
+            # comment in this line to use a specific branch of the neos dev collection
+            # neos-dev-collection-branch: "task/..."
+            db: { engine: mysql, image: 'mysql:8.0', port: 3306, options: '--health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3' }
+
+          - php-version: "8.4"
+            neos-version: "9.1"
             # comment in this line to use a specific branch of the neos dev collection
             # neos-dev-collection-branch: "task/..."
             db: { engine: mysql, image: 'mariadb:10.8', port: 3306, options: '--health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3' }
@@ -124,7 +130,32 @@ jobs:
           cd ${FLOW_PATH_ROOT}
           FLOW_CONTEXT=Testing/Behat ./flow doctrine:migrate --quiet
 
-      - name: Run behat Neos.ContentRepository.BehavioralTests tests
+      - name: Configure new graph projection
+        run: |
+          cd ${FLOW_PATH_ROOT}
+
+          cat <<EOF >> Configuration/Testing/Settings.ContentRepositoryRegistry.yaml
+          Neos:
+            ContentRepositoryRegistry:
+              presets:
+                default:
+                  contentGraphProjection:
+                    factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\DoctrineDbalContentGraphProjectionFactory
+          EOF
+
+          cat <<EOF >> Configuration/Testing/Objects.yaml
+          Neos\ContentRepository\Core\Projection\ContentGraph\ProjectionIntegrityViolationDetectionRunnerFactoryInterface:
+            scope: singleton
+            factoryObjectName: 'Neos\ContentRepositoryRegistry\Infrastructure\GenericObjectFactory'
+            arguments:
+              1:
+                value: 'Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\DoctrineDbalProjectionIntegrityViolationDetectionRunnerFactory'
+              2:
+                object: 'Doctrine\DBAL\Connection'
+
+          EOF
+
+      - name: Run behat Neos.ContentRepository.BehavioralTests tests with new graph projection
         run: |
           cd ${FLOW_PATH_ROOT}
           FLOW_CONTEXT=Testing/Behat bin/behat -f progress --strict --no-interaction -c Packages/Neos/Neos.ContentRepository.BehavioralTests/Tests/Behavior/behat.yml.dist -vvv --stop-on-failure

@@ -9,13 +9,16 @@
   },
   "license": "GPL-3.0+",
   "scripts": {
-    "synchronise-adapter": "@php ./scripts/synchronise-adapter",
+    "synchronise-adapter": [
+      "rm -rf src/Generated",
+      "@php ./scripts/synchronise-adapter 9.2"
+    ],
     "lint:phpstan": "../../../bin/phpstan analyse src --level 8"
   },
   "require": {
-    "neos/contentrepository-core": "~9.2",
-    "neos/contentrepository-dbal": "~9.2",
-    "neos/contentrepositoryregistry": "~9.2",
+    "php": ">= 8.4",
+    "neos/contentrepository-core": "~9.0 || ~9.1",
+    "neos/contentrepositoryregistry": "~9.0 || ~9.1",
     "doctrine/dbal": "^3.1.4",
     "doctrine/migrations": "*"
   },
