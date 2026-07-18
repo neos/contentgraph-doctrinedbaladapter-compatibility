@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Upgrade;
+namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Upgrade\Command;
 
 use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
 use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
