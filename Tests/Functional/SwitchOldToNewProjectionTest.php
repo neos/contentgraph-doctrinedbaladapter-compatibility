@@ -7,7 +7,9 @@ namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Tests\Functional;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\Migrations\AbstractMigration;
 use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\NextDoctrineDbalContentGraphProjectionReadModel;
+use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Schema\Command\RenameContentGraphTablesMigrationBuilder;
 use Neos\ContentRepository\Core\ContentRepository;
 use Neos\ContentRepository\Core\Factory\ContentRepositoryServiceFactoryDependencies;
 use Neos\ContentRepository\Core\Factory\ContentRepositoryServiceFactoryInterface;
@@ -34,10 +36,13 @@ use Neos\EventStore\Model\Event\SequenceNumber;
 use Neos\Flow\Configuration\ConfigurationManager;
 use Neos\Flow\Core\Bootstrap;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
 
 final class SwitchOldToNewProjectionTest extends TestCase
 {
+    use RenameTablesMigrationTrait;
+
     protected static ContentRepositoryId $contentRepositoryId;
 
     protected ContentRepository $contentRepository;
@@ -256,6 +261,10 @@ final class SwitchOldToNewProjectionTest extends TestCase
               factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Testing\TestingNextDoctrineDbalContentGraphProjectionFactory
               catchUpHooks: {}
         YAML);
+
+        $this->getRenameTablesMigration(self::$contentRepositoryId)->executeUp();
+        // TODO indexes are not stable - probably because we would need to encode the crId and rename them in the above migration
+        $this->subscriptionEngine->setup(SubscriptionEngineCriteria::create(['contentGraph']));
 
         // new temporary subscription id will be marked as detached
         self::assertEquals(

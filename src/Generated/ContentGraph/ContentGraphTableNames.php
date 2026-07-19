@@ -18,7 +18,13 @@ final readonly class ContentGraphTableNames
     ) {
     }
 
+    /** Creates the original table prefix for testing */
     public static function create(ContentRepositoryId $contentRepositoryId): self
+    {
+        return new self(sprintf('cr_%s_p_graph', $contentRepositoryId->value));
+    }
+
+    public static function createNextPrefixed(ContentRepositoryId $contentRepositoryId): self
     {
         return new self(sprintf('cr_%s_p_92_graph', $contentRepositoryId->value));
     }

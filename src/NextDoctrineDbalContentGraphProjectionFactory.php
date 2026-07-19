@@ -35,7 +35,7 @@ final class NextDoctrineDbalContentGraphProjectionFactory implements ProjectionF
             throw new \RuntimeException(sprintf('Cannot build content graph for non mariadb/mysql connection %s', $this->dbal->getDatabasePlatform()::class), 1780672272);
         }
 
-        $tableNames = ContentGraphTableNames::create(
+        $tableNames = ContentGraphTableNames::createNextPrefixed(
             $projectionFactoryDependencies->contentRepositoryId
         );
 
