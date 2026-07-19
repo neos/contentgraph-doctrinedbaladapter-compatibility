@@ -158,10 +158,10 @@ jobs:
 
           EOF
 
-      # - name: Run Functional tests
-      #   run: |
-      #     cd ${FLOW_PATH_ROOT}
-      #     bin/phpunit -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml Packages/Application/Neos.ContentGraph.DoctrineDbalAdapter.Compatibility/Tests/Functional
+      - name: Run Functional tests
+        run: |
+          cd ${FLOW_PATH_ROOT}
+          bin/phpunit -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml Packages/Application/Neos.ContentGraph.DoctrineDbalAdapter.Compatibility/Tests/Functional
 
       - name: Run doctrine migrate
         # prevent db transaction in connection from being closed by migrating in advance
