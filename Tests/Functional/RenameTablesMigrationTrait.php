@@ -11,16 +11,18 @@ trait RenameTablesMigrationTrait
 {
     final protected function getRenameTablesMigration(ContentRepositoryId $contentRepositoryId): TestingDoctrineMigrationRunner
     {
+        $version = 'Eval' . random_int(10000, 99999);
+
         $migrationCode = (new RenameContentGraphTablesMigrationBuilder(
-            migrationVersion: '20242209',
+            migrationVersion: $version,
             contentRepositoryId: $contentRepositoryId
         ))->build();
 
         eval(substr($migrationCode, strlen('<?php')));
 
-        $className = '\Neos\Flow\Persistence\Doctrine\Migrations\Version20242209';
+        $className = "\Neos\Flow\Persistence\Doctrine\Migrations\Version$version";
 
-        return new TestingDoctrineMigrationRunner(
+        return TestingDoctrineMigrationRunner::create(
             $this->getObject(Connection::class),
             $this->getMockBuilder(LoggerInterface::class)->getMock(),
             $className

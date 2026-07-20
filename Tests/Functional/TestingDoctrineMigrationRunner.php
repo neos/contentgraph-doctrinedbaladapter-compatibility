@@ -7,31 +7,50 @@ namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Tests\Functional;
 use Doctrine\DBAL\Connection;
 use Doctrine\Migrations\AbstractMigration;
 use Psr\Log\LoggerInterface;
+use Neos\Flow\Annotations as Flow;
 
+#[Flow\Proxy(false)]
 class TestingDoctrineMigrationRunner
 {
-    /**
-     * @param class-string<AbstractMigration> $className
-     */
-    public function __construct(
+    private function __construct(
         private Connection $connection,
-        private LoggerInterface $logger,
-        private string $className,
+        private AbstractMigration $migration,
     ) {
+    }
+
+    public static function create(
+        Connection $connection,
+        LoggerInterface $logger,
+        string $className,
+    ): self {
+        return new self(
+            connection: $connection,
+            migration: new $className(
+                $connection,
+                $logger
+            )
+        );
     }
 
     public function executeUp(): void
     {
-        $migration = new $this->className(
-            $this->connection,
-            $this->logger
-        );
-
         $schema = $this->connection->createSchemaManager()->introspectSchema();
 
-        $migration->up($schema);
+        $this->migration->up($schema);
 
-        foreach ($migration->getSql() as $query) {
+        foreach ($this->migration->getSql() as $query) {
+            $this->connection->executeQuery($query->getStatement(), $query->getParameters(), $query->getTypes());
+        }
+    }
+
+
+    public function executeDown(): void
+    {
+        $schema = $this->connection->createSchemaManager()->introspectSchema();
+
+        $this->migration->down($schema);
+
+        foreach ($this->migration->getSql() as $query) {
             $this->connection->executeQuery($query->getStatement(), $query->getParameters(), $query->getTypes());
         }
     }
