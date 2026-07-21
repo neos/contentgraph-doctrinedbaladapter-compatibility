@@ -228,7 +228,7 @@ final class SwitchOldToNewProjectionTest extends AbstractContentRepositoryProjec
         // TODO indexes are not stable - probably because we would need to encode the crId and rename them in the above migration
         $this->subscriptionEngine->setup(SubscriptionEngineCriteria::create(['contentGraph']));
 
-        // new temporary subscription id will be marked as detached
+        // old content graph subscription will be renamed and will be marked as detached
         self::assertEquals(
             SubscriptionStatusCollection::fromArray([
                 ProjectionSubscriptionStatus::create(
@@ -239,7 +239,7 @@ final class SwitchOldToNewProjectionTest extends AbstractContentRepositoryProjec
                     setupStatus: ProjectionStatus::ok(),
                 ),
                 DetachedSubscriptionStatus::create(
-                    subscriptionId: SubscriptionId::fromString('contentGraph_92'),
+                    subscriptionId: SubscriptionId::fromString('contentGraph_90'),
                     subscriptionStatus: SubscriptionStatus::ACTIVE,
                     subscriptionPosition: SequenceNumber::fromInteger(8),
                 )
@@ -251,7 +251,7 @@ final class SwitchOldToNewProjectionTest extends AbstractContentRepositoryProjec
         $this->contentRepository->handle(CreateWorkspace::create(WorkspaceName::fromString('user-four'), WorkspaceName::fromString('live'), ContentStreamId::fromString('cs-user-four')));
         self::assertNotNull($this->contentRepository->findWorkspaceByName(WorkspaceName::fromString('user-four')));
 
-        // new temporary subscription is marked as detached
+        // old content graph is detached
         self::assertEquals(
             SubscriptionStatusCollection::fromArray([
                 ProjectionSubscriptionStatus::create(
@@ -262,7 +262,7 @@ final class SwitchOldToNewProjectionTest extends AbstractContentRepositoryProjec
                     setupStatus: ProjectionStatus::ok(),
                 ),
                 DetachedSubscriptionStatus::create(
-                    subscriptionId: SubscriptionId::fromString('contentGraph_92'),
+                    subscriptionId: SubscriptionId::fromString('contentGraph_90'),
                     subscriptionStatus: SubscriptionStatus::DETACHED,
                     subscriptionPosition: SequenceNumber::fromInteger(8),
                 ),
