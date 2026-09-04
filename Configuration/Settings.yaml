@@ -1,7 +1,0 @@
-
-Neos:
-  ContentRepositoryRegistry:
-    presets:
-      default:
-        contentGraphProjection:
-          factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\OldDoctrineDbalContentGraphProjectionFactory

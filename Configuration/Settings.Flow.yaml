@@ -1,0 +1,7 @@
+Neos:
+  Flow:
+    object:
+      includeClasses:
+        # disable proxies for generated code
+        "Neos.ContentGraph.DoctrineDbalAdapter.Compatibility":
+          - "Neos\\\\ContentGraph\\\\DoctrineDbalAdapter\\\\Compatibility(?!\\\\Generated\\\\)"
