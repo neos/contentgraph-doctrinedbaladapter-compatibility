@@ -3,14 +3,14 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\EventsDeduplicateBaseWorkspaceChanges;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\EventsDeduplicateBaseWorkspaceChanges;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Neos\ContentRepository\Core\Feature\ContentStreamEventStreamName;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Shared\CRUpgradeContext;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Shared\EventEnvelopeFactory;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Shared\EventStoreBackupTrait;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Shared\OutputMessageTrait;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\Shared\CRUpgradeContext;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\Shared\EventEnvelopeFactory;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\Shared\EventStoreBackupTrait;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\Shared\OutputMessageTrait;
 use Neos\EventStore\Model\Event\CorrelationId;
 use Neos\EventStore\Model\Event\SequenceNumber;
 use Neos\EventStore\Model\Event\StreamName;

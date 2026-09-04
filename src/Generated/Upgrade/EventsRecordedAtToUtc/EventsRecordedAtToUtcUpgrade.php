@@ -3,11 +3,11 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\EventsRecordedAtToUtc;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\EventsRecordedAtToUtc;
 
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Shared\CRUpgradeContext;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Shared\EventStoreBackupTrait;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Shared\OutputMessageTrait;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\Shared\CRUpgradeContext;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\Shared\EventStoreBackupTrait;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\Shared\OutputMessageTrait;
 
 /**
  * Optional migration to adjust event time stamps and node dates to UTC
