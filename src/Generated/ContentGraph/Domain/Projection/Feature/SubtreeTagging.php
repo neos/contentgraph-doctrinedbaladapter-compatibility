@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\Feature;
 
-use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
 use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\ContentStreamLayers;

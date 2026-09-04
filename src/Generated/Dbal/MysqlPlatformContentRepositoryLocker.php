@@ -6,8 +6,8 @@ declare(strict_types=1);
 namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal;
 
 use Doctrine\DBAL\Connection;
-use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
 use Doctrine\DBAL\Exception as DBALException;
+use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
 
 /**
  * Utility to acquire advisory locks from a mysql/mariadb database

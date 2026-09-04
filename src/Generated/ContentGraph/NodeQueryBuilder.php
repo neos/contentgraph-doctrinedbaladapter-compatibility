@@ -7,9 +7,7 @@ namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Co
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
-use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\ContentStreamLayers;
 use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\NodeRelationAnchorPoint;
-use Neos\ContentRepository\Core\DimensionSpace\DimensionSpacePoint;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Filter\FindRootNodeAggregatesFilter;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Filter\NodeType\ExpandedNodeTypeCriteria;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Filter\PropertyValue\Criteria\AndCriteria;

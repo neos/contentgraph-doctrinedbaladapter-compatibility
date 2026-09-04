@@ -31,8 +31,6 @@ use Neos\ContentRepository\Core\EventStore\InitiatingEventMetadata;
 use Neos\ContentRepository\Core\Feature\Common\EmbedsContentStreamId;
 use Neos\ContentRepository\Core\Feature\Common\InterdimensionalSiblings;
 use Neos\ContentRepository\Core\Feature\Common\PublishableToWorkspaceInterface;
-use Neos\ContentRepository\Core\Feature\ContentStreamClosing\Event\ContentStreamWasClosed;
-use Neos\ContentRepository\Core\Feature\ContentStreamClosing\Event\ContentStreamWasReopened;
 use Neos\ContentRepository\Core\Feature\ContentStreamCreation\Event\ContentStreamWasCreated;
 use Neos\ContentRepository\Core\Feature\ContentStreamEventStreamName;
 use Neos\ContentRepository\Core\Feature\ContentStreamForking\Event\ContentStreamWasForked;
@@ -62,7 +60,6 @@ use Neos\ContentRepository\Core\Feature\WorkspaceModification\Event\WorkspaceBas
 use Neos\ContentRepository\Core\Feature\WorkspaceModification\Event\WorkspaceWasRemoved;
 use Neos\ContentRepository\Core\Feature\WorkspacePublication\Event\WorkspaceWasDiscarded;
 use Neos\ContentRepository\Core\Feature\WorkspacePublication\Event\WorkspaceWasPublished;
-use Neos\ContentRepository\Core\Feature\WorkspaceRebase\Event\WorkspaceRebaseFailed;
 use Neos\ContentRepository\Core\Feature\WorkspaceRebase\Event\WorkspaceWasRebased;
 use Neos\ContentRepository\Core\NodeType\NodeTypeName;
 use Neos\ContentRepository\Core\Projection\ContentGraph\ContentGraphProjectionInterface;
@@ -147,11 +144,9 @@ abstract class DoctrineDbalContentGraphProjection
     public function apply(EventInterface $event, EventEnvelope $eventEnvelope): void
     {
         match ($event::class) {
-            ContentStreamWasClosed::class => $this->whenContentStreamWasClosed($event),
             ContentStreamWasCreated::class => $this->whenContentStreamWasCreated($event),
             ContentStreamWasForked::class => $this->whenContentStreamWasForked($event),
             ContentStreamWasRemoved::class => $this->whenContentStreamWasRemoved($event),
-            ContentStreamWasReopened::class => $this->whenContentStreamWasReopened($event),
             DimensionShineThroughWasAdded::class => $this->whenDimensionShineThroughWasAdded($event),
             DimensionSpacePointWasMoved::class => $this->whenDimensionSpacePointWasMoved($event),
             NodeAggregateNameWasChanged::class => $this->whenNodeAggregateNameWasChanged($event, $eventEnvelope),
@@ -170,7 +165,6 @@ abstract class DoctrineDbalContentGraphProjection
             SubtreeWasTagged::class => $this->whenSubtreeWasTagged($event),
             SubtreeWasUntagged::class => $this->whenSubtreeWasUntagged($event),
             WorkspaceBaseWorkspaceWasChanged::class => $this->whenWorkspaceBaseWorkspaceWasChanged($event, $eventEnvelope),
-            WorkspaceRebaseFailed::class => $this->whenWorkspaceRebaseFailed($event),
             WorkspaceWasCreated::class => $this->whenWorkspaceWasCreated($event, $eventEnvelope),
             WorkspaceWasDiscarded::class => $this->whenWorkspaceWasDiscarded($event, $eventEnvelope),
             WorkspaceWasPublished::class => $this->whenWorkspaceWasPublished($event, $eventEnvelope),
@@ -207,11 +201,6 @@ abstract class DoctrineDbalContentGraphProjection
             $this->dbal->rollBack();
             $this->contentRepositoryLocker->releaseLock();
         }
-    }
-
-    private function whenContentStreamWasClosed(ContentStreamWasClosed $event): void
-    {
-        $this->closeContentStream($event->contentStreamId);
     }
 
     private function whenContentStreamWasCreated(ContentStreamWasCreated $event): void
@@ -421,11 +410,6 @@ abstract class DoctrineDbalContentGraphProjection
         } catch (DBALException $e) {
             throw new \RuntimeException(sprintf('Failed to delete hierarchy relations: %s', $e->getMessage()), 1716489265, $e);
         }
-    }
-
-    private function whenContentStreamWasReopened(ContentStreamWasReopened $event): void
-    {
-        $this->reopenContentStream($event->contentStreamId);
     }
 
     private function whenDimensionShineThroughWasAdded(DimensionShineThroughWasAdded $event): void
@@ -844,15 +828,6 @@ abstract class DoctrineDbalContentGraphProjection
         $this->updateBaseWorkspace($event->workspaceName, $event->baseWorkspaceName, $event->newContentStreamId, $eventEnvelope->version);
     }
 
-    private function whenWorkspaceRebaseFailed(WorkspaceRebaseFailed $event): void
-    {
-        // legacy handling:
-        // before https://github.com/neos/neos-development-collection/pull/4965 this event was emitted and set the content stream status to `REBASE_ERROR`
-        // instead of setting the error state on replay for old events we make it almost behave like if the rebase had failed today: reopen the workspaces content stream id
-        // the candidateContentStreamId will be removed by the ContentStreamPruner
-        $this->reopenContentStream($event->sourceContentStreamId);
-    }
-
     private function whenWorkspaceWasCreated(WorkspaceWasCreated $event, EventEnvelope $eventEnvelope): void
     {
         $this->createWorkspace($event->workspaceName, $event->baseWorkspaceName, $event->newContentStreamId, $eventEnvelope->version);
@@ -957,9 +932,9 @@ abstract class DoctrineDbalContentGraphProjection
                   :targetContentStreamLayer as contentstreamlayer
                 FROM
                   -- prefilter via OR - using IN() is slower as more rows are examined
-                  {$contentStreamHierarchyRelationQuery->withPossibleWhereCondition(
-                      StaticWhereCondition::fromString('h', 'h.childnodeanchor = :originalNodeAnchor OR h.parentnodeanchor = :originalNodeAnchor')
-                  )->toSql()} h
+                  {$contentStreamHierarchyRelationQuery
+                    ->withPossibleWhereCondition(StaticWhereCondition::fromString('h', 'h.childnodeanchor = :originalNodeAnchor OR h.parentnodeanchor = :originalNodeAnchor'))
+                    ->toSql()} h
                 WHERE
                   :originalNodeAnchor IN (h.childnodeanchor, h.parentnodeanchor)
                 ON DUPLICATE KEY UPDATE parentnodeanchor = VALUES(parentnodeanchor), childnodeanchor = VALUES(childnodeanchor)
