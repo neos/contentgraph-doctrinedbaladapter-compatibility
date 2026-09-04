@@ -3,20 +3,19 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Projection\Feature;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\Feature;
 
-use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Projection\ContentStreamLayers;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Projection\NodeRelationAnchorPoint;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\NodeFactory;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\ContentStreamLayers;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\NodeRelationAnchorPoint;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Repository\NodeFactory;
 use Neos\ContentRepository\Core\DimensionSpace\DimensionSpacePoint;
 use Neos\ContentRepository\Core\DimensionSpace\DimensionSpacePointSet;
 use Neos\ContentRepository\Core\Feature\SubtreeTagging\Dto\SubtreeTag;
 use Neos\ContentRepository\Core\Projection\ContentGraph\NodeTags;
 use Neos\ContentRepository\Core\SharedModel\Node\NodeAggregateId;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal\Query\StaticWhereCondition;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal\Query\StaticWhereCondition;
 
 /**
  * The subtree tagging projection feature trait

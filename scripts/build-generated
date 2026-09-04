@@ -47,10 +47,10 @@ foreach ($originalSources as $originalSourceFile) {
             ],
             [
                 <<<PHP
-                Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph
+                Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph
                 PHP,
                 <<<PHP
-                Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal
+                Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal
                 PHP
             ],
             $newContents
@@ -179,7 +179,7 @@ foreach ($originalSources as $originalSourceFile) {
                 ],
                 [
                     <<<PHP
-                    Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal
+                    Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal
                     PHP
                 ],
                 $newContents
@@ -216,7 +216,7 @@ foreach ($originalSources as $originalSourceFile) {
                 ],
                 [
                     <<<PHP
-                    Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade
+                    Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade
                     PHP
                 ],
                 $newContents

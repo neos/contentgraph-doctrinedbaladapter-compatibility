@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Upgrade\Command;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Upgrade\Command;
 
 use Doctrine\DBAL\Connection;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Command\CRUpgradeContextFactory;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Shared\CRUpgradeContext;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\Command\CRUpgradeContextFactory;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\Shared\CRUpgradeContext;
 use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
 use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\EventsDeduplicateBaseWorkspaceChanges\EventsDeduplicateBaseWorkspaceChangesUpgrade;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\EventsRecordedAtToUtc\EventsRecordedAtToUtcUpgrade;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\EventsDeduplicateBaseWorkspaceChanges\EventsDeduplicateBaseWorkspaceChangesUpgrade;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\EventsRecordedAtToUtc\EventsRecordedAtToUtcUpgrade;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
 
