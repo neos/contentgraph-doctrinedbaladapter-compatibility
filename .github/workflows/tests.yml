@@ -93,8 +93,8 @@ jobs:
 
           composer config --no-plugins allow-plugins.neos/composer-plugin true
           
-          composer config repositories.package '{ "type": "path", "url": "../contentgraph-doctrinedbaladapter-compatibility", "options": { "symlink": false } }'
-          composer require --no-update --no-interaction neos/contentgraph-doctrinedbaladapter-compatibility:@dev
+          composer config repositories.package '{ "type": "path", "url": "../contentgraph-doctrinedbaladapter-forward-compatibility", "options": { "symlink": false } }'
+          composer require --no-update --no-interaction neos/contentgraph-doctrinedbaladapter-forward-compatibility:@dev
           
           composer require --dev --no-update --no-interaction phpstan/phpstan:^1.10
 
